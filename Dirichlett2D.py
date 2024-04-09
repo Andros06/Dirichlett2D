@@ -4,7 +4,7 @@ import scipy.sparse.linalg as lin
 import matplotlib.pyplot as plt
 
 # bestem antall punkter i gitteret i x-retning
-m=20
+m=50
 
 # Setter grenser til x
 Xmin = -5
@@ -28,7 +28,7 @@ L1 = (1/h**2)*sp.diags([1,-2,1],[-1,0,1],shape=(m,m))
 I1 = sp.eye(m)
 
 # antall punkter i gitteret i y-retning
-n=20
+n=50
 
 # sett n+2 punkter mellom 0 og 1
 y=np.linspace(Ymin, Ymax, n+2)
