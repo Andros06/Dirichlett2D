@@ -3,53 +3,51 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as lin
 import matplotlib.pyplot as plt
 
-# bestem antall punkter i gitteret i x-retning
-m=50
+# Antall punkt i x-retning, Legger til 2 pga rand
+m = 50
+M = m + 2
 
-# Setter grenser til x
+# Antall punkt i y-retning, Legger til 2 pga rand
+n = 50
+N = n + 2
+
+# Setter området for x
 Xmin = -5
 Xmax = 5
 
-# Setter grenser til y
+# Setter området for y
 Ymin = 0
 Ymax = 2
 
-# sett m+2 punkter mellom Xmin og Xmax
-# m+2 fordi vi teller ikke randene Xmin og Xmax - se randbetingelser for hvorfor
-x=np.linspace(Xmin, Xmax ,m+2)
 
-# avstand mellom punktene
-h=x[1]-x[0]
+# Lager x verdier mellom Xmin og Xmax med M antall punkt
+x = np.linspace(Xmin, Xmax , M)
 
-# setter opp matrise tilsvarende Poissonligning i x-retning
+# Finner avstand mellom punktene
+h = x[1]-x[0]
+
+# Setter opp matrise tilsvarende Poissonligning i x-retning
 L1 = (1/h**2)*sp.diags([1,-2,1],[-1,0,1],shape=(m,m))
 
-# identitetsmatrise i x-koordinatene
+# Identitetsmatrise i x-koordinatene
 I1 = sp.eye(m)
 
-# antall punkter i gitteret i y-retning
-n=50
 
-# sett n+2 punkter mellom 0 og 1
-y=np.linspace(Ymin, Ymax, n+2)
+# Lager y verdier mellom Ymin og Ymax med N antall punkt
+y=np.linspace(Ymin, Ymax, N)
 
-# avstand mellom punktene
+# Finner avstand mellom punktene
 k = y[1]-y[0]
 
-# setter opp matrise tilsvarende Poissonligning i y-retning
+# Setter opp matrise tilsvarende Poissonligning i y-retning
 L2 = (1/k**2)*sp.diags([1,-2,1],[-1,0,1],shape=(n,n))
 
-# identitetsmatrise i y-koordinatene
+# Identitetsmatrise i y-koordinatene
 I2 = sp.eye(n)
 
-# sett sammen matrisa med Kroneckerproduktet
+
+# Bruker kroneckerproduktet for å danne A
 A = sp.kron(L1,I2) + sp.kron(I1,L2)
-
-# Hvis vi ønsker kan vi skrive ut matrisa med:
-print(A.toarray())
-
-
-
 
 
 # Lag en vektor (-1/h^2,0,0,0,...) med m elementer
@@ -68,6 +66,9 @@ Zn_l[0] = -1/(k**2)
 Zn_r = np.zeros(n)
 Zn_r[-1] = -1/(k**2)
 
+
+# Randbetingelser fra oppgåve
+
 # funksjonen som gir u(x,0)
 def f1(x):
     return 0*x
@@ -84,6 +85,7 @@ def f3(y):
 def f4(y):
     return np.sin(2*np.pi*y)
 
+
 # Lag en vektor fra randbetingelser
 F = sp.kron(f1(x[1:-1]),Zn_l) + sp.kron(f2(x[1:-1]),Zn_r) + sp.kron(Zm_l,f3(y[1:-1])) + sp.kron(Zm_r,f4(y[1:-1]))
 
@@ -94,8 +96,9 @@ F = sp.kron(f1(x[1:-1]),Zn_l) + sp.kron(f2(x[1:-1]),Zn_r) + sp.kron(Zm_l,f3(y[1:
 # velger indexing='ij' siden vi bruker F[i,j] = F[x_i,y_j], ikke F[x_j,y_i]
 X,Y = np.meshgrid(x[1:-1],y[1:-1], indexing='ij')
 
+# Setter inn funksjonen fra oppgåve
 def f(x,y):
-    return 0*x # sett din funksjon inn her 
+    return 0*x  
 
 # funksjonsverdiene i en array
 Z = f(X,Y)
@@ -107,17 +110,13 @@ G = np.reshape(Z,(m*n))
 F = F + G
 
 
-
 # Vi bruker transpose for å gi vår vektor riktig
 u = lin.spsolve(A,np.transpose(F))
 
 # reshaper til en vektor
 U = np.reshape(u,(m,n))
 
-# lag figuren
+# Plotting av figur
 fig,ax = plt.subplots(subplot_kw ={"projection":"3d"}, figsize=(15,15))
-
-# plotter
 ax.plot_surface(X, Y, U)
-
 plt.show()
