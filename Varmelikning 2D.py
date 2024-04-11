@@ -7,13 +7,13 @@ import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from matplotlib import cm
 
-k = 0.45
-Cp = 2.6
-p = 1.04
-alpha = k / (Cp * p)
-
+k = 0.045
+Cp = 0.26
+p = 0.104
+alpha = (k / (Cp * p))
+#k / (Cp * p)
 # bestem antall punkter i gitteret i x-retning
-m=50
+m=100
 
 # sett m+2 punkter mellom 0 og 1
 # m+2 fordi vi teller ikke randene 0 og 1 - se randbetingelser for hvorfor
@@ -23,13 +23,13 @@ x = np.linspace(-5, 5, m+2)
 h = x[1] - x[0]
 
 # setter opp matrise tilsvarende Poissonligning i x-retning
-L1 = (1/h**2)*sp.diags([1,-2,1], [-1,0,1], shape=(m,m))
+L1 = alpha * (1/h**2)*sp.diags([1,-2,1], [-1,0,1], shape=(m,m))
 
 # identitetsmatrise i x-koordinatene
 I1 = sp.eye(m)
 
 # antall punkter i gitteret i y-retning
-n = 50
+n = 100
 
 # sett n+2 punkter mellom 0 og 1
 y = np.linspace(-5, 5, n+2)
@@ -38,7 +38,7 @@ y = np.linspace(-5, 5, n+2)
 k = y[1] - y[0]
 
 # setter opp matrise tilsvarende Poissonligning i y-retning
-L2 = (1/k**2)*sp.diags([1,-2,1],[-1,0,1],shape=(n,n))
+L2 = alpha * (1/k**2)*sp.diags([1,-2,1],[-1,0,1],shape=(n,n))
 
 # identitetsmatrise i y-koordinatene
 I2 = sp.eye(n)
@@ -111,7 +111,7 @@ fig = plt.figure(figsize=(20, 10))
 
 # 3D plot
 ax1 = fig.add_subplot(131, projection="3d")
-Z = np.reshape(u[2000, :], (m, n))
+Z = np.reshape(u[1000, :], (m, n))
 surf = ax1.plot_surface(X, Y, Z, cmap=cm.viridis)
 ax1.set_title("3D Plot")
 
