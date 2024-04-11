@@ -3,6 +3,7 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as lin
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+#from IPython.display import HTML
 from matplotlib import cm
 
 # Define the Euler method for solving differential equations
@@ -53,6 +54,7 @@ def ute(x):
     return 200
 
 ute_vectorized = np.vectorize(ute)
+
 F = sp.kron(ute_vectorized(x[1:-1]), Zn_l) + sp.kron(ute_vectorized(x[1:-1]), Zn_r) + sp.kron(Zm_l, ute_vectorized(y[1:-1])) + sp.kron(Zm_r, ute_vectorized(y[1:-1]))
 
 # Differential equation function
@@ -66,7 +68,32 @@ u0 = 20 + np.zeros(m * n)
 # Solve the equation using the Euler method
 u, t = euler(f, u0, 0, 80, 10000)
 
-# Visualization with matplotlib
+
+
+""""
+fig, ax2 = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(15, 15))
+Z = np.reshape(u[100, :], (m, n))
+ax2.plot_surface(np.transpose(X), np.transpose(Y), Z, cmap=cm.Blues)
+ax2.set_title("3D Plot")
+plt.show()
+
+fig, ax = plt.subplots(figsize=(15, 10))
+ims = []
+for i in range(40):
+    im = ax.imshow(-np.reshape(u[100 * i, :], (m, n)), cmap='RdBu', animated=True)
+    if i == 0:
+        ax.imshow(-np.reshape(u[0, :], (m, n)), cmap='RdBu')  # show an initial one first
+    ims.append([im])
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=1000)
+ax.set_title("Animation")
+plt.show()
+"""
+
+
+
+
+
+# Visualization with matplotli
 fig = plt.figure(figsize=(20, 10))
 
 # 3D plot
