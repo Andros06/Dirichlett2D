@@ -1,9 +1,12 @@
 # Koden hentet direkte fra 7_1
-
 import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as lin
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib.animation import FuncAnimation
+from matplotlib import cm
+
 k = 0.45
 Cp = 2.6
 p = 1.04
@@ -20,7 +23,7 @@ x = np.linspace(-5, 5, m+2)
 h = x[1] - x[0]
 
 # setter opp matrise tilsvarende Poissonligning i x-retning
-L1 = alpha * (1/h**2)*sp.diags([1,-2,1], [-1,0,1], shape=(m,m))
+L1 = (1/h**2)*sp.diags([1,-2,1], [-1,0,1], shape=(m,m))
 
 # identitetsmatrise i x-koordinatene
 I1 = sp.eye(m)
@@ -35,7 +38,7 @@ y = np.linspace(-5, 5, n+2)
 k = y[1] - y[0]
 
 # setter opp matrise tilsvarende Poissonligning i y-retning
-L2 = alpha * (1/k**2)*sp.diags([1,-2,1],[-1,0,1],shape=(n,n))
+L2 = (1/k**2)*sp.diags([1,-2,1],[-1,0,1],shape=(n,n))
 
 # identitetsmatrise i y-koordinatene
 I2 = sp.eye(n)
@@ -59,21 +62,17 @@ Zn_l[0] = -1/(k**2)
 Zn_r = np.zeros(n)
 Zn_r[-1] = -1/(k**2)
 
-# funksjonen som gir u(x,0)
 def f1(x):
-    return 200
+    return np.full_like(x, 200)
 
-# funksjonen som gir u(x,1)
 def f2(x):
-    return 200
+    return np.full_like(x, 200)
 
-# funksjonen som gir u(y,0)
 def f3(y):
-    return 200
+    return np.full_like(y, 200)
 
-# funksjonen som gir u(y,1)
 def f4(y):
-    return 200
+    return np.full_like(y, 200)
 
 # Lag en vektor fra randbetingelser
 F = sp.kron(f1(x[1:-1]),Zn_l) + sp.kron(f2(x[1:-1]),Zn_r) + sp.kron(Zm_l,f3(y[1:-1])) + sp.kron(Zm_r,f4(y[1:-1]))
@@ -107,14 +106,30 @@ u0 = np.reshape(U0, m*n)
 u, t = euler(f, u0, 0, 10, 10000)
 
 
-
 # en 3d-plott
+fig = plt.figure(figsize=(20, 10))
 
-fig,ax2 = plt.subplots(subplot_kw ={"projection":"3d"}, figsize=(15,15))
+# 3D plot
+ax1 = fig.add_subplot(131, projection="3d")
+Z = np.reshape(u[2000, :], (m, n))
+surf = ax1.plot_surface(X, Y, Z, cmap=cm.viridis)
+ax1.set_title("3D Plot")
 
-# vi plotter verdiene etter 500 tidssteg
-Z = np.reshape(u[500,:],(m,n))
+# Color plot
+ax2 = fig.add_subplot(132)
+pos = ax2.imshow(-Z, cmap='RdBu', interpolation='none')
+ax2.set_title("Color Plot")
+fig.colorbar(pos, ax=ax2)
 
-ax2.plot_surface(X, Y, Z)
+# Animation
+ax3 = fig.add_subplot(133)
+ims = []
+for i in range(40):
+    im = ax3.imshow(-np.reshape(u[100*i, :], (m, n)), cmap='RdBu', animated=True)
+    ims.append([im])
 
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=1000)
+ax3.set_title("Animation")
+
+plt.tight_layout()
 plt.show()

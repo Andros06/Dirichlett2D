@@ -3,6 +3,8 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as lin
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+#import IPython.display
+from matplotlib.animation import FuncAnimation
 #from IPython.display import HTML
 from matplotlib import cm
 
@@ -68,7 +70,12 @@ u0 = 20 + np.zeros(m * n)
 # Solve the equation using the Euler method
 u, t = euler(f, u0, 0, 80, 10000)
 
-
+# Check when the temperature in the middle reaches 60 degrees
+for i in range(len(t)):
+    temp_middle = u[i, m*n//2]  # Temperature in the middle of the object
+    if temp_middle >= 60:
+        print(f"Temperature in the middle of the object reaches 60 degrees at time {t[i]}")
+        break
 
 """"
 fig, ax2 = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(15, 15))
@@ -89,18 +96,16 @@ ax.set_title("Animation")
 plt.show()
 """
 
-
-
-
-
-# Visualization with matplotli
+# Visualization with matplotlib
 fig = plt.figure(figsize=(20, 10))
+
 
 # 3D plot
 ax1 = fig.add_subplot(131, projection="3d")
-Z = np.reshape(u[100, :], (m, n))
+Z = np.reshape(u[2000, :], (m, n))
 surf = ax1.plot_surface(np.transpose(X), np.transpose(Y), Z, cmap=cm.viridis)
 ax1.set_title("3D Plot")
+
 
 # Color plot
 ax2 = fig.add_subplot(132)
