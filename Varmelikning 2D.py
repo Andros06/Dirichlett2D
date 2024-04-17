@@ -97,7 +97,6 @@ X, Y = np.meshgrid(x[1:-1],y[1:-1], indexing='ij')
 
 # trenger initialverdien u(x,y,0) = y
 U0 = Y
-print(Y)
 
 # vektorisering av initialverdien
 u0 = np.reshape(U0, m*n)
