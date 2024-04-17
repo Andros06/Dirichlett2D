@@ -22,7 +22,7 @@ def euler(f, u0, t0, tf, n):
 k1 = 0.45
 p = 1.04
 Cp = 2.6
-alpha = (k1 / (Cp * p)) / 10
+alpha = 1.5 #(k1 / (Cp * p))
 a = 5
 b = 5
 m = 50  # Number of points in the x-direction
@@ -68,7 +68,7 @@ X, Y = np.meshgrid(x[1:-1], y[1:-1])
 u0 = 20 + np.zeros(m * n)
 
 # Solve the equation using the Euler method
-u, t = euler(f, u0, 0, 10, 10000)
+u, t = euler(f, u0, 0, 50, 10000)
 
 # Check when the temperature in the middle reaches 60 degrees
 for i in range(len(t)):
@@ -78,25 +78,7 @@ for i in range(len(t)):
         break
 
 
-fig, ax2 = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(15, 15))
-Z = np.reshape(u[1000, :], (m, n))
-ax2.plot_surface(np.transpose(X), np.transpose(Y), Z, cmap=cm.Blues)
-ax2.set_title("3D Plot")
-plt.show()
 
-fig, ax = plt.subplots(figsize=(15, 10))
-ims = []
-for i in range(40):
-    im = ax.imshow(-np.reshape(u[100 * i, :], (m, n)), cmap='RdBu', animated=True)
-    if i == 0:
-        ax.imshow(-np.reshape(u[0, :], (m, n)), cmap='RdBu')  # show an initial one first
-    ims.append([im])
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=1000)
-ax.set_title("Animation")
-plt.show()
-
-
-"""
 # Visualization with matplotlib
 fig = plt.figure(figsize=(20, 10))
 
@@ -126,4 +108,3 @@ ax3.set_title("Animation")
 
 plt.tight_layout()
 plt.show()
-"""

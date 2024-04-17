@@ -7,10 +7,10 @@ import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from matplotlib import cm
 
-k = 0.045
-Cp = 0.26
-p = 0.104
-alpha = (k / (Cp * p))
+k = 50
+Cp = 7800
+p = 460
+alpha = 1.5
 #k / (Cp * p)
 # bestem antall punkter i gitteret i x-retning
 m=100
@@ -97,6 +97,7 @@ X, Y = np.meshgrid(x[1:-1],y[1:-1], indexing='ij')
 
 # trenger initialverdien u(x,y,0) = y
 U0 = Y
+print(Y)
 
 # vektorisering av initialverdien
 u0 = np.reshape(U0, m*n)
