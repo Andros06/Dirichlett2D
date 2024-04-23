@@ -8,6 +8,7 @@ from matplotlib.animation import FuncAnimation
 #from IPython.display import HTML
 from matplotlib import cm
 
+
 # Define the Euler method for solving differential equations
 def euler(f, u0, t0, tf, n):
     t = np.linspace(t0, tf, n+1)
@@ -18,13 +19,28 @@ def euler(f, u0, t0, tf, n):
         u[i+1, :] = u[i, :] + dt * f(u[i, :], t[i])
     return u, t
 
+
+
+"""
+ANNA EULER FRA JUPYTER
+def euler(f,u0,t0,tf,n):
+    t = np.linspace(t0,tf,n)
+    u = np.zeros((n,u0.size))
+    u[0,:] = u0
+    for i in np.arange(n-1):
+        u[i+1,:] = u[i,:] + (t[i+1]-t[i])*(f(u[i],t[i]))
+    return u,t
+"""
+
+
 # Parameters
 k1 = 0.45
-p = 1.04
-Cp = 2.6
-alpha = (k1 / (Cp * p)) / 10
-a = 5
-b = 5
+p = 1037.4
+Cp = 2600
+alpha = (k1 / (Cp * p))
+print(alpha)
+a = 0.05
+b = 0.05
 m = 50  # Number of points in the x-direction
 n = 50  # Number of points in the y-direction
 
@@ -78,32 +94,13 @@ for i in range(len(t)):
         break
 
 
-fig, ax2 = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(15, 15))
-Z = np.reshape(u[1000, :], (m, n))
-ax2.plot_surface(np.transpose(X), np.transpose(Y), Z, cmap=cm.Blues)
-ax2.set_title("3D Plot")
-plt.show()
-
-fig, ax = plt.subplots(figsize=(15, 10))
-ims = []
-for i in range(40):
-    im = ax.imshow(-np.reshape(u[100 * i, :], (m, n)), cmap='RdBu', animated=True)
-    if i == 0:
-        ax.imshow(-np.reshape(u[0, :], (m, n)), cmap='RdBu')  # show an initial one first
-    ims.append([im])
-ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=1000)
-ax.set_title("Animation")
-plt.show()
-
-
-"""
 # Visualization with matplotlib
 fig = plt.figure(figsize=(20, 10))
 
 
 # 3D plot
 ax1 = fig.add_subplot(131, projection="3d")
-Z = np.reshape(u[2000, :], (m, n))
+Z = np.reshape(u[1000, :], (m, n))
 surf = ax1.plot_surface(np.transpose(X), np.transpose(Y), Z, cmap=cm.viridis)
 ax1.set_title("3D Plot")
 
@@ -125,5 +122,27 @@ ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=1
 ax3.set_title("Animation")
 
 plt.tight_layout()
+plt.show()
+
+
+
+
+
+"""
+fig, ax2 = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(15, 15))
+Z = np.reshape(u[1000, :], (m, n))
+ax2.plot_surface(np.transpose(X), np.transpose(Y), Z, cmap=cm.Blues)
+ax2.set_title("3D Plot")
+plt.show()
+
+fig, ax = plt.subplots(figsize=(15, 10))
+ims = []
+for i in range(40):
+    im = ax.imshow(-np.reshape(u[100 * i, :], (m, n)), cmap='RdBu', animated=True)
+    if i == 0:
+        ax.imshow(-np.reshape(u[0, :], (m, n)), cmap='RdBu')  # show an initial one first
+    ims.append([im])
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True, repeat_delay=1000)
+ax.set_title("Animation")
 plt.show()
 """
