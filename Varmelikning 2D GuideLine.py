@@ -84,7 +84,7 @@ X, Y = np.meshgrid(x[1:-1], y[1:-1])
 u0 = 20 + np.zeros(m * n)
 
 # Solve the equation using the Euler method
-u, t = euler(f, u0, 0, 10, 10000)
+u, t = euler(f, u0, 0, 50, 10000)
 
 # Check when the temperature in the middle reaches 60 degrees
 for i in range(len(t)):

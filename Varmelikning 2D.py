@@ -7,10 +7,10 @@ import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from matplotlib import cm
 
-k = 0.045
-Cp = 0.26
-p = 0.104
-alpha = (k / (Cp * p))
+k = 50
+Cp = 7800
+p = 460
+alpha = 1.5
 #k / (Cp * p)
 # bestem antall punkter i gitteret i x-retning
 m=100
