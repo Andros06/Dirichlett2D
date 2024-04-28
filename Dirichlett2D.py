@@ -23,7 +23,7 @@ Ymax = 2
 # Lager x verdier mellom Xmin og Xmax med M antall punkt
 x = np.linspace(Xmin, Xmax , M)
 
-# Finner avstand mellom punktene
+# Finner steglengden i x-retning
 h = x[1]-x[0]
 
 # Setter opp matrise tilsvarende Poissonligning i x-retning
@@ -36,7 +36,7 @@ I1 = sp.eye(m)
 # Lager y verdier mellom Ymin og Ymax med N antall punkt
 y=np.linspace(Ymin, Ymax, N)
 
-# Finner avstand mellom punktene
+# Finner steglengden i y-retning
 k = y[1]-y[0]
 
 # Setter opp matrise tilsvarende Poissonligning i y-retning
@@ -50,24 +50,19 @@ I2 = sp.eye(n)
 A = sp.kron(L1,I2) + sp.kron(I1,L2)
 
 
-# Lag en vektor (-1/h^2,0,0,0,...) med m elementer
+# Legger inn randbetingelser
 Zm_l = np.zeros(m)
 Zm_l[0] = -1/(h**2)
 
-# Lag en vektor (0,0,0,...,0,-1/h^2) med m elementer
 Zm_r = np.zeros(m)
 Zm_r[-1] = -1/(h**2)
 
-# Lag en vektor (1/k^2,0,0,0,...) med n elementer
 Zn_l = np.zeros(n)
 Zn_l[0] = -1/(k**2)
 
-# Lag en vektor (0,0,0,...,0,1/k^2) med n elementer
 Zn_r = np.zeros(n)
 Zn_r[-1] = -1/(k**2)
 
-
-# Randbetingelser fra oppgåve
 
 # funksjonen som gir u(x,0)
 def f1(x):
@@ -86,35 +81,32 @@ def f4(y):
     return np.sin(2*np.pi*y)
 
 
-# Lag en vektor fra randbetingelser
+# Lagar en vektor fra randbetingelser
 F = sp.kron(f1(x[1:-1]),Zn_l) + sp.kron(f2(x[1:-1]),Zn_r) + sp.kron(Zm_l,f3(y[1:-1])) + sp.kron(Zm_r,f4(y[1:-1]))
 
 
-# Vi har antatt at funksjonen f(x,y) i Poissonligning er lik null. Hvis ikke må vi lage en vektor f(x,y)
-
-# lag et rutenett fra punktene i x og y
-# velger indexing='ij' siden vi bruker F[i,j] = F[x_i,y_j], ikke F[x_j,y_i]
+# Lager eit rutenett med x verdier langs y akse og y verdier langs x akse
 X,Y = np.meshgrid(x[1:-1],y[1:-1], indexing='ij')
 
 # Setter inn funksjonen fra oppgåve
 def f(x,y):
     return 0*x  
 
-# funksjonsverdiene i en array
+# Funksjonsverdiene i en array
 Z = f(X,Y)
 
-# reshape array til å få en vektor med f(x,y)
+# Reshape array til å få en vektor med f(x,y)
 G = np.reshape(Z,(m*n))
 
-# legg sammen f(x,y) med randbetingelsene 
+# Legg samman f(x,y) med randbetingelsar
 F = F + G
-
 
 # Vi bruker transpose for å gi vår vektor riktig
 u = lin.spsolve(A,np.transpose(F))
 
-# reshaper til en vektor
+# Reshaper til en vektor
 U = np.reshape(u,(m,n))
+
 
 # Plotting av figur
 fig,ax = plt.subplots(subplot_kw ={"projection":"3d"}, figsize=(15,15))
